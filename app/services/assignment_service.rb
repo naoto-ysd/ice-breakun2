@@ -19,7 +19,6 @@ class AssignmentService
     assignment = DutyAssignment.create!(
       user: selected_user,
       assignment_date: @assignment_date,
-      assignment_method: "custom",
       status: "pending"
     )
 

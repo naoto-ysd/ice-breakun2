@@ -111,7 +111,7 @@ class AssignmentsController < ApplicationController
   end
 
   def assignment_params
-    params.require(:duty_assignment).permit(:assignment_date, :user_id, :assignment_method)
+    params.require(:duty_assignment).permit(:assignment_date, :user_id)
   end
 
   def send_weekly_slack_notification(assignments)
