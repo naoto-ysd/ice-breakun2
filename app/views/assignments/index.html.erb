@@ -36,7 +36,6 @@
           <% else %>
             <p class="text-muted">今日の当番はまだ割り当てられていません。</p>
             <div class="btn-group" role="group">
-              <%= button_to "ランダム割り当て", assign_today_assignments_path(method: :random), method: :post, class: "btn btn-outline-primary", form_class: "d-inline" %>
               <%= button_to "公平割り当て", assign_today_assignments_path(method: :custom), method: :post, class: "btn btn-outline-primary", form_class: "d-inline" %>
             </div>
           <% end %>

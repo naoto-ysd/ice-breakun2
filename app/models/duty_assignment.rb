@@ -2,7 +2,7 @@ class DutyAssignment < ApplicationRecord
   belongs_to :user
 
   validates :assignment_date, presence: true
-  validates :assignment_method, presence: true, inclusion: { in: %w[random custom] }
+  validates :assignment_method, presence: true, inclusion: { in: %w[custom] }
   validates :status, presence: true, inclusion: { in: %w[pending completed cancelled] }
 
   scope :pending, -> { where(status: "pending") }

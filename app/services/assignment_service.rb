@@ -1,5 +1,5 @@
 class AssignmentService
-  def initialize(assignment_date = Date.current, method = :random)
+  def initialize(assignment_date = Date.current, method = :custom)
     @assignment_date = assignment_date
     @method = method.to_s
   end
@@ -24,7 +24,7 @@ class AssignmentService
   end
 
   def self.available_methods
-    %w[random custom]
+    %w[custom]
   end
 
   private
@@ -40,17 +40,11 @@ class AssignmentService
 
   def select_user(users)
     case @method
-    when "random"
-      select_random_user(users)
     when "custom"
       select_custom_user(users)
     else
       raise "無効な割り当て方法: #{@method}"
     end
-  end
-
-  def select_random_user(users)
-    users.sample
   end
 
   def select_custom_user(users)

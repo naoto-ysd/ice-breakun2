@@ -19,7 +19,7 @@ class AssignmentsController < ApplicationController
     begin
       assignment_service = AssignmentService.new(
         assignment_params[:assignment_date].present? ? Date.parse(assignment_params[:assignment_date]) : Date.current,
-        assignment_params[:assignment_method] || :random
+        assignment_params[:assignment_method] || :custom
       )
 
       @assignment = assignment_service.assign_duty
@@ -63,7 +63,7 @@ class AssignmentsController < ApplicationController
 
   def assign_today
     begin
-      assignment_service = AssignmentService.new(Date.current, params[:method] || :random)
+      assignment_service = AssignmentService.new(Date.current, params[:method] || :custom)
       assignment = assignment_service.assign_duty
 
       redirect_to assignment, notice: "今日の当番が割り当てられました"
@@ -75,7 +75,7 @@ class AssignmentsController < ApplicationController
   def assign_week
     begin
       assignments = []
-      method = params[:method] || :sequential
+      method = params[:method] || :custom
 
       (Date.current..6.days.from_now).each do |date|
         # 土日をスキップする場合

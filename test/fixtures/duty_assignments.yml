@@ -3,13 +3,13 @@
 one:
   user: one
   assignment_date: 2025-07-12
-  assignment_method: MyString
-  status: MyString
+  assignment_method: custom
+  status: pending
   completed_at: 2025-07-12 15:16:04
 
 two:
   user: two
   assignment_date: 2025-07-12
-  assignment_method: MyString
-  status: MyString
+  assignment_method: custom
+  status: pending
   completed_at: 2025-07-12 15:16:04
