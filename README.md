@@ -34,7 +34,6 @@
 - **フレームワーク**: Ruby on Rails 8.0.2
 - **データベース**: 
   - 開発環境: PostgreSQL 15
-  - テスト環境: SQLite3
 - **フロントエンド**: Bootstrap 5, Stimulus, Turbo
 - **テスト**: RSpec, FactoryBot
 - **コード品質**: RuboCop, Brakeman

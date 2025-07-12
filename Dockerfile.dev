@@ -8,8 +8,6 @@ RUN apt-get update -qq && \
   pkg-config \
   curl \
   libvips \
-  sqlite3 \
-  libsqlite3-dev \
   libpq-dev \
   postgresql-client \
   nodejs \
