@@ -28,6 +28,28 @@ class AssignmentService
     assignment
   end
 
+  def assign_duty_to_user(user)
+    if existing_assignment
+      raise "#{@assignment_date}の当番は既に割り当てられています（#{existing_assignment.user.name}）"
+    end
+
+    # 選択されたユーザーが休暇中でないかチェック
+    if user_on_vacation?(user)
+      raise "#{user.name}は休暇中のため、当番に割り当てることができません"
+    end
+
+    assignment = DutyAssignment.create!(
+      user: user,
+      assignment_date: @assignment_date,
+      status: "pending"
+    )
+
+    # Slack通知を送信
+    send_slack_notification(assignment)
+
+    assignment
+  end
+
   private
 
   def existing_assignment
@@ -46,6 +68,12 @@ class AssignmentService
   def select_user(users)
     # 最も当番回数の少ないユーザーを選択
     users.min_by(&:total_duty_count)
+  end
+
+  def user_on_vacation?(user)
+    return false unless user.vacation_start_date && user.vacation_end_date
+
+    user.vacation_start_date <= Date.current && user.vacation_end_date >= Date.current
   end
 
   def send_slack_notification(assignment)

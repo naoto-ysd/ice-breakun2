@@ -21,11 +21,18 @@ class AssignmentsController < ApplicationController
 
   def create
     begin
-      assignment_service = AssignmentService.new(
-        assignment_params[:assignment_date].present? ? Date.parse(assignment_params[:assignment_date]) : Date.current
-      )
+      assignment_date = assignment_params[:assignment_date].present? ? Date.parse(assignment_params[:assignment_date]) : Date.current
 
-      @assignment = assignment_service.assign_duty
+      if assignment_params[:user_id].present?
+        # 手動割り当て
+        selected_user = User.find(assignment_params[:user_id])
+        assignment_service = AssignmentService.new(assignment_date)
+        @assignment = assignment_service.assign_duty_to_user(selected_user)
+      else
+        # 自動割り当て
+        assignment_service = AssignmentService.new(assignment_date)
+        @assignment = assignment_service.assign_duty
+      end
 
       redirect_to assignment_path(@assignment), notice: "当番が正常に割り当てられました"
     rescue => e

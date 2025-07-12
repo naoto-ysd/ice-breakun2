@@ -28,6 +28,23 @@
               </div>
             </div>
 
+            <div class="mb-3">
+              <%= form.label :user_id, "担当者", class: "form-label" %>
+              <%= form.select :user_id, options_for_select([["自動割り当て", ""]] + User.all.collect { |u| 
+                  display_name = u.name
+                  if u.on_vacation?
+                    display_name += " (休暇中 #{u.vacation_start_date.strftime('%m/%d')}-#{u.vacation_end_date.strftime('%m/%d')})"
+                  end
+                  [display_name, u.id] 
+                }), 
+                  { selected: "" }, 
+                  { class: "form-select" } %>
+              <div class="form-text">
+                担当者を選択してください。「自動割り当て」を選択すると、当番回数が最も少ないユーザーが自動的に選ばれます。<br>
+                <small class="text-muted">※休暇中のユーザーを選択するとエラーになります</small>
+              </div>
+            </div>
+
 
 
             <div class="row">
