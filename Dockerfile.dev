@@ -1,0 +1,43 @@
+FROM ruby:3.2.5-slim
+
+# 必要なパッケージをインストール
+RUN apt-get update -qq && \
+  apt-get install --no-install-recommends -y \
+  build-essential \
+  git \
+  pkg-config \
+  curl \
+  libvips \
+  sqlite3 \
+  libsqlite3-dev \
+  libpq-dev \
+  postgresql-client \
+  nodejs \
+  npm \
+  && rm -rf /var/lib/apt/lists /var/cache/apt/archives
+
+# 作業ディレクトリを設定
+WORKDIR /rails
+
+# GemfileとGemfile.lockをコピー
+COPY Gemfile Gemfile.lock ./
+
+# 開発環境用のGemをインストール
+ENV BUNDLE_PATH="/usr/local/bundle"
+RUN bundle install
+
+# アプリケーションのコードをコピー
+COPY . .
+
+# 開発環境の設定
+ENV RAILS_ENV="development"
+ENV RAILS_SERVE_STATIC_FILES="true"
+
+# ポート3000を公開
+EXPOSE 3000
+
+# エントリーポイントを設定
+ENTRYPOINT ["./bin/docker-entrypoint"]
+
+# 開発サーバーを起動
+CMD ["./bin/rails", "server", "-b", "0.0.0.0"] 
