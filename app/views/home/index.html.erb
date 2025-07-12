@@ -1,0 +1,42 @@
+<% content_for :title, "アイスブレイ君" %>
+
+<div class="container">
+  <div class="row min-vh-100 justify-content-center align-items-center">
+    <div class="col-12 col-md-8 col-lg-6 text-center">
+      <h1 class="display-4 mb-4 text-primary">アイスブレイ君</h1>
+      
+      <div class="mb-5">
+        <%= image_tag "/icon.png", alt: "アイスブレイ君", class: "img-fluid rounded-circle shadow-lg", style: "max-width: 200px;" %>
+      </div>
+      
+      <p class="lead mb-4">
+        チームのアイスブレイクスピーチの当番管理を効率化する<br>
+        シンプルで使いやすいツールです
+      </p>
+      
+      <div class="d-grid gap-3 d-md-flex justify-content-md-center">
+        <%= link_to "メンバー管理", users_path, class: "btn btn-primary btn-lg" %>
+        <%= link_to "当番管理", assignments_path, class: "btn btn-success btn-lg" %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .min-vh-100 {
+    min-height: 100vh;
+  }
+  
+  h1 {
+    font-weight: bold;
+  }
+  
+  .shadow-lg {
+    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175) !important;
+  }
+  
+  .btn-lg {
+    padding: 0.75rem 2rem;
+    font-size: 1.1rem;
+  }
+</style> 
