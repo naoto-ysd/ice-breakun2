@@ -54,19 +54,7 @@
             </div>
           </div>
 
-          <div class="row mb-3">
-            <div class="col-sm-3">
-              <strong>割り当て方法:</strong>
-            </div>
-            <div class="col-sm-9">
-              <% case @assignment.assignment_method %>
-              <% when 'custom' %>
-                割り当て（当番回数が少ない順）
-              <% else %>
-                <%= @assignment.assignment_method %>
-              <% end %>
-            </div>
-          </div>
+
 
           <div class="row mb-3">
             <div class="col-sm-3">

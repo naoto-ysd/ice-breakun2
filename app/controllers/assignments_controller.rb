@@ -19,21 +19,18 @@ class AssignmentsController < ApplicationController
 
   def new
     @assignment = DutyAssignment.new
-    @available_methods = AssignmentService.available_methods
   end
 
   def create
     begin
       assignment_service = AssignmentService.new(
-        assignment_params[:assignment_date].present? ? Date.parse(assignment_params[:assignment_date]) : Date.current,
-        assignment_params[:assignment_method] || :custom
+        assignment_params[:assignment_date].present? ? Date.parse(assignment_params[:assignment_date]) : Date.current
       )
 
       @assignment = assignment_service.assign_duty
 
       redirect_to assignment_path(@assignment), notice: "当番が正常に割り当てられました"
     rescue => e
-      @available_methods = AssignmentService.available_methods
       @assignment = DutyAssignment.new(assignment_params)
       flash.now[:alert] = e.message
       render :new
@@ -70,8 +67,8 @@ class AssignmentsController < ApplicationController
 
   def assign_today
     begin
-      Rails.logger.info "=== assign_today called with method: #{params[:method]}"
-      assignment_service = AssignmentService.new(Date.current, params[:method] || :custom)
+      Rails.logger.info "=== assign_today called"
+      assignment_service = AssignmentService.new(Date.current)
       Rails.logger.info "=== AssignmentService created"
       assignment = assignment_service.assign_duty
       Rails.logger.info "=== Assignment created: #{assignment.inspect}"
@@ -87,13 +84,12 @@ class AssignmentsController < ApplicationController
   def assign_week
     begin
       assignments = []
-      method = params[:method] || :custom
 
       (Date.current..6.days.from_now).each do |date|
         # 土日をスキップする場合
         next if date.saturday? || date.sunday?
 
-        assignment_service = AssignmentService.new(date, method)
+        assignment_service = AssignmentService.new(date)
         assignments << assignment_service.assign_duty
       end
 
@@ -115,7 +111,7 @@ class AssignmentsController < ApplicationController
   end
 
   def assignment_params
-    params.require(:duty_assignment).permit(:assignment_date, :assignment_method, :user_id)
+    params.require(:duty_assignment).permit(:assignment_date, :user_id, :assignment_method)
   end
 
   def send_weekly_slack_notification(assignments)

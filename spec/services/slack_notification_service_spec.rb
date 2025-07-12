@@ -54,14 +54,4 @@ RSpec.describe SlackNotificationService, type: :service do
       end
     end
   end
-
-  describe '#assignment_method_display' do
-    it 'returns correct display name for custom method' do
-      expect(service.send(:assignment_method_display, 'custom')).to eq('割り当て（当番回数が少ない順）')
-    end
-
-    it 'returns the method name for unknown methods' do
-      expect(service.send(:assignment_method_display, 'unknown')).to eq('unknown')
-    end
-  end
 end

@@ -1,7 +1,6 @@
 class AssignmentService
-  def initialize(assignment_date = Date.current, method = :custom)
+  def initialize(assignment_date = Date.current)
     @assignment_date = assignment_date
-    @method = method.to_s
   end
 
   def assign_duty
@@ -20,7 +19,7 @@ class AssignmentService
     assignment = DutyAssignment.create!(
       user: selected_user,
       assignment_date: @assignment_date,
-      assignment_method: @method,
+      assignment_method: "custom",
       status: "pending"
     )
 
@@ -28,10 +27,6 @@ class AssignmentService
     send_slack_notification(assignment)
 
     assignment
-  end
-
-  def self.available_methods
-    %w[custom]
   end
 
   private
@@ -50,16 +45,7 @@ class AssignmentService
   end
 
   def select_user(users)
-    case @method
-    when "custom"
-      select_custom_user(users)
-    else
-      raise "無効な割り当て方法: #{@method}"
-    end
-  end
-
-  def select_custom_user(users)
-    # カスタム選択のロジック（最も当番回数の少ないユーザー）
+    # 最も当番回数の少ないユーザーを選択
     users.min_by(&:total_duty_count)
   end
 

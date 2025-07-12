@@ -44,11 +44,6 @@ class SlackNotificationService
               title: "Slack ID",
               value: "<@#{assignment.user.slack_id}>",
               short: true
-            },
-            {
-              title: "割り当て方法",
-              value: assignment_method_display(assignment.assignment_method),
-              short: true
             }
           ],
           footer: "アイスブレイ君",
@@ -78,15 +73,6 @@ class SlackNotificationService
         }
       ]
     }
-  end
-
-  def assignment_method_display(method)
-    case method
-    when "custom"
-      "\u5272\u308A\u5F53\u3066\uFF08\u5F53\u756A\u56DE\u6570\u304C\u5C11\u306A\u3044\u9806\uFF09"
-    else
-      method
-    end
   end
 
   def send_to_slack(message)

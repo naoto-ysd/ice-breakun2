@@ -28,17 +28,9 @@
               </div>
             </div>
 
-            <div class="mb-3">
-              <%= form.label :assignment_method, "割り当て方法", class: "form-label" %>
-              <%= form.select :assignment_method, options_for_select([
-                ['割り当て（当番回数が少ない順）', 'custom']
-              ], 'custom'), {}, { class: "form-select" } %>
-              <div class="form-text">
-                <ul class="mb-0">
-                  <li><strong>割り当て</strong>: 当番回数が最も少ないユーザーを選択</li>
-                </ul>
-              </div>
-            </div>
+            <%= form.hidden_field :assignment_method, value: "custom" %>
+
+
 
             <div class="row">
               <div class="col-12">

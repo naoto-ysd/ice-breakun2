@@ -2,7 +2,6 @@ FactoryBot.define do
   factory :duty_assignment do
     association :user
     assignment_date { Date.current }
-    assignment_method { "custom" }
     status { "pending" }
     completed_at { nil }
 

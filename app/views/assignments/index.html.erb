@@ -22,7 +22,6 @@
             <div class="d-flex justify-content-between align-items-center">
               <div>
                 <h6 class="mb-1"><%= @current_assignment.user.name %></h6>
-                <small class="text-muted">割り当て方法: <%= @current_assignment.assignment_method %></small>
               </div>
               <div>
                 <% if @current_assignment.pending? %>
@@ -36,7 +35,7 @@
           <% else %>
             <p class="text-muted">今日の当番はまだ割り当てられていません。</p>
             <div class="btn-group" role="group">
-              <%= button_to "割り当て", assign_today_assignments_path(method: :custom), method: :post, class: "btn btn-outline-primary", form_class: "d-inline" %>
+              <%= button_to "割り当て", assign_today_assignments_path, method: :post, class: "btn btn-outline-primary", form_class: "d-inline" %>
             </div>
           <% end %>
         </div>
@@ -51,7 +50,7 @@
         <div class="card-header d-flex justify-content-between align-items-center">
           <h5 class="card-title mb-0">今週の当番</h5>
           <div class="btn-group" role="group">
-            <%= button_to "今週を割り当て", assign_week_assignments_path(method: :custom), method: :post, class: "btn btn-outline-primary btn-sm", form_class: "d-inline" %>
+            <%= button_to "今週を割り当て", assign_week_assignments_path, method: :post, class: "btn btn-outline-primary btn-sm", form_class: "d-inline" %>
           </div>
         </div>
         <div class="card-body">
@@ -62,7 +61,6 @@
                   <tr>
                     <th>日付</th>
                     <th>当番者</th>
-                    <th>方法</th>
                     <th>状態</th>
                     <th>アクション</th>
                   </tr>
@@ -72,7 +70,6 @@
                     <tr>
                       <td><%= assignment.assignment_date.strftime("%m/%d (%a)") %></td>
                       <td><%= assignment.user.name %></td>
-                      <td><%= assignment.assignment_method %></td>
                       <td>
                         <% if assignment.pending? %>
                           <span class="badge bg-warning">予定</span>
@@ -113,7 +110,6 @@
                   <tr>
                     <th>日付</th>
                     <th>当番者</th>
-                    <th>割り当て方法</th>
                     <th>状態</th>
                     <th>完了日時</th>
                     <th>アクション</th>
@@ -124,7 +120,6 @@
                     <tr class="<%= 'table-warning' if assignment.overdue? %>">
                       <td><%= assignment.assignment_date.strftime("%Y/%m/%d (%a)") %></td>
                       <td><%= assignment.user.name %></td>
-                      <td><%= assignment.assignment_method %></td>
                       <td>
                         <% if assignment.pending? %>
                           <span class="badge bg-warning">予定</span>
