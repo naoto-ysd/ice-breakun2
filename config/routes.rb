@@ -7,6 +7,7 @@ Rails.application.routes.draw do
     end
     collection do
       post :assign_today
+      post :assign_for_date
     end
   end
 

@@ -15,7 +15,7 @@
     <div class="col-12">
       <div class="card">
         <div class="card-header">
-          <h5 class="card-title mb-0">今日の当番</h5>
+          <h5 class="card-title mb-0">今日の当番（<%= Date.current.strftime("%m月%d日") %>）</h5>
         </div>
         <div class="card-body">
           <% if @current_assignment %>
@@ -36,6 +36,74 @@
             <p class="text-muted">今日の当番はまだ割り当てられていません。</p>
             <div class="btn-group" role="group">
               <%= button_to "割り当て", assign_today_assignments_path, method: :post, class: "btn btn-outline-primary", form_class: "d-inline" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 明日の当番 -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">明日の当番（<%= (Date.current + 1.day).strftime("%m月%d日") %>）</h5>
+        </div>
+        <div class="card-body">
+          <% if @tomorrow_assignment %>
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <h6 class="mb-1"><%= @tomorrow_assignment.user.name %></h6>
+              </div>
+              <div>
+                <% if @tomorrow_assignment.pending? %>
+                  <span class="badge bg-secondary">予定</span>
+                <% elsif @tomorrow_assignment.completed? %>
+                  <span class="badge bg-success">完了</span>
+                <% else %>
+                  <span class="badge bg-danger">キャンセル</span>
+                <% end %>
+              </div>
+            </div>
+          <% else %>
+            <p class="text-muted">明日の当番はまだ割り当てられていません。</p>
+            <div class="btn-group" role="group">
+              <%= button_to "割り当て", assign_for_date_assignments_path, params: { date: (Date.current + 1.day).strftime("%Y-%m-%d") }, method: :post, class: "btn btn-outline-primary", form_class: "d-inline" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 明後日の当番 -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">明後日の当番（<%= (Date.current + 2.days).strftime("%m月%d日") %>）</h5>
+        </div>
+        <div class="card-body">
+          <% if @day_after_tomorrow_assignment %>
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <h6 class="mb-1"><%= @day_after_tomorrow_assignment.user.name %></h6>
+              </div>
+              <div>
+                <% if @day_after_tomorrow_assignment.pending? %>
+                  <span class="badge bg-secondary">予定</span>
+                <% elsif @day_after_tomorrow_assignment.completed? %>
+                  <span class="badge bg-success">完了</span>
+                <% else %>
+                  <span class="badge bg-danger">キャンセル</span>
+                <% end %>
+              </div>
+            </div>
+          <% else %>
+            <p class="text-muted">明後日の当番はまだ割り当てられていません。</p>
+            <div class="btn-group" role="group">
+              <%= button_to "割り当て", assign_for_date_assignments_path, params: { date: (Date.current + 2.days).strftime("%Y-%m-%d") }, method: :post, class: "btn btn-outline-primary", form_class: "d-inline" %>
             </div>
           <% end %>
         </div>

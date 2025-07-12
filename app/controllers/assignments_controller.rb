@@ -10,6 +10,8 @@ class AssignmentsController < ApplicationController
 
   def index
     @current_assignment = DutyAssignment.for_date(Date.current).first
+    @tomorrow_assignment = DutyAssignment.for_date(Date.current + 1.day).first
+    @day_after_tomorrow_assignment = DutyAssignment.for_date(Date.current + 2.days).first
   end
 
   def show
@@ -82,6 +84,27 @@ class AssignmentsController < ApplicationController
     rescue => e
       Rails.logger.error "=== Assignment failed: #{e.class} - #{e.message}"
       Rails.logger.error "=== Backtrace: #{e.backtrace.first(5)}"
+      redirect_to assignments_path, alert: e.message
+    end
+  end
+
+  def assign_for_date
+    begin
+      assignment_date = Date.parse(params[:date])
+      assignment_service = AssignmentService.new(assignment_date)
+      assignment = assignment_service.assign_duty
+
+      date_str = case assignment_date
+      when Date.current + 1.day
+                   "明日"
+      when Date.current + 2.days
+                   "明後日"
+      else
+                   assignment_date.strftime("%m月%d日")
+      end
+
+      redirect_to assignment_path(assignment), notice: "#{date_str}の当番が割り当てられました（#{assignment.user.name}さん）"
+    rescue => e
       redirect_to assignments_path, alert: e.message
     end
   end
