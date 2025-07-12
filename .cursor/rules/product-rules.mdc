@@ -31,7 +31,6 @@
 | id | integer | PRIMARY KEY | 自動増分ID |
 | user_id | integer | NOT NULL, FOREIGN KEY | ユーザーID（外部キー） |
 | assignment_date | date | NOT NULL | 当番日 |
-| assignment_method | string | NOT NULL | 割り当て方法（custom） |
 | status | string | NOT NULL | 状態（pending/completed/cancelled） |
 | completed_at | datetime | NULL可 | 完了日時 |
 | created_at | datetime | NOT NULL | 作成日時 |
@@ -69,7 +68,6 @@
 #### バリデーション
 
 - **assignment_date**: 必須入力
-- **assignment_method**: 必須入力、customのみ
 - **status**: 必須入力、pending/completed/cancelledのいずれか
 
 #### 関連付け
@@ -102,18 +100,16 @@
 
 #### 初期化
 
-- `initialize(assignment_date, method)`
+- `initialize(assignment_date)`
   - assignment_date: 当番日（デフォルト: 今日）
-  - method: 割り当て方法（custom、デフォルト: custom）
 
 #### メソッド
 
 - `assign_duty`: 当番を割り当てる
-- `self.available_methods`: 利用可能な割り当て方法を取得
 
 #### 割り当て方法
 
-1. **custom**: 当番回数が最も少ないユーザーを選択（割り当て制）
+- 当番回数が最も少ないユーザーを選択（割り当て制）
 
 #### 除外条件
 
@@ -176,7 +172,6 @@
 
 許可されるパラメーター：
 - assignment_date
-- assignment_method
 - user_id
 
 ## ユーザーインターフェース
@@ -232,23 +227,23 @@
   - 当番履歴
 
 - **今日の当番**:
-  - 当番者情報（名前、割り当て方法）
+  - 当番者情報（名前）
   - 完了・キャンセルボタン（予定状態の場合）
   - 割り当てボタン（未割り当ての場合）
 
 - **今週の当番**:
-  - 今週の当番一覧（日付、当番者、方法、状態）
+  - 今週の当番一覧（日付、当番者、状態）
   - 今週一括割り当てボタン
 
 - **当番履歴**:
-  - 過去の当番一覧（日付、当番者、方法、状態、完了日時）
+  - 過去の当番一覧（日付、当番者、状態、完了日時）
   - 各当番の操作ボタン（詳細、完了、キャンセル、削除）
 
 #### 詳細画面（show）
 
 - **当番情報**:
   - 当番者の詳細情報
-  - 当番日、割り当て方法、状態
+  - 当番日、状態
   - 完了日時（完了済みの場合）
 
 - **サイドバー**:
@@ -259,10 +254,8 @@
 
 - **フォームフィールド**:
   - 当番日（デフォルト: 今日）
-  - 割り当て方法のみ
 
 - **説明テキスト**:
-  - 割り当て方法の説明
   - 注意事項
 
 #### 編集画面（edit）
@@ -270,7 +263,6 @@
 - **フォームフィールド**:
   - 当番者選択
   - 当番日
-  - 割り当て方法
 
 - **注意事項**:
   - 編集の影響についての警告
@@ -320,7 +312,7 @@ root "home#index"  # ルートパス（トップページ）
    - 期限切れ判定: 予定状態で当番日が過去の場合
 
 6. **割り当て方法**:
-   - custom: 当番回数が最も少ないユーザーを選択（割り当て制）
+   - 当番回数が最も少ないユーザーを選択（割り当て制）
 
 ## 通知・連携
 
@@ -402,4 +394,16 @@ root "home#index"  # ルートパス（トップページ）
   - 画面中央配置のためのFlexboxレイアウト
 - **理由**: SOW.mdの仕様に基づき、より分かりやすいエントリーポイントを提供
 - **互換性**: 既存のURL構造は変更なし、ルートパスのみ変更
+
+### 2025-01-12: assignment_methodカラム削除
+- **変更内容**: DutyAssignmentsテーブルからassignment_methodカラムを削除し、システムを簡素化
+- **影響範囲**:
+  - データベース: assignment_methodカラムを削除するマイグレーションを実行
+  - DutyAssignmentモデル: assignment_methodのバリデーションを削除
+  - AssignmentService: 初期化パラメータからmethodを削除、常に当番回数が最も少ないユーザーを選択
+  - AssignmentsController: assignment_methodのパラメータ許可を削除
+  - ビューファイル: 割り当て方法の選択フィールドと表示を削除
+  - テスト: assignment_method関連のテストを削除
+- **理由**: 単一の割り当て方法（当番回数が最も少ないユーザーを選択）に統一し、システムを簡素化
+- **互換性**: 既存のassignment_methodデータは削除されるが、機能的には影響なし
 
