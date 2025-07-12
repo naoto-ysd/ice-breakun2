@@ -1,6 +1,3 @@
----
-alwaysApply: true
----
 
 # アイスブレイクアプリ - 機能仕様書
 
@@ -34,7 +31,7 @@ alwaysApply: true
 | id | integer | PRIMARY KEY | 自動増分ID |
 | user_id | integer | NOT NULL, FOREIGN KEY | ユーザーID（外部キー） |
 | assignment_date | date | NOT NULL | 当番日 |
-| assignment_method | string | NOT NULL | 割り当て方法（random/sequential/custom） |
+| assignment_method | string | NOT NULL | 割り当て方法（random/custom） |
 | status | string | NOT NULL | 状態（pending/completed/cancelled） |
 | completed_at | datetime | NULL可 | 完了日時 |
 | created_at | datetime | NOT NULL | 作成日時 |
@@ -72,7 +69,7 @@ alwaysApply: true
 #### バリデーション
 
 - **assignment_date**: 必須入力
-- **assignment_method**: 必須入力、random/sequential/customのいずれか
+- **assignment_method**: 必須入力、random/customのいずれか
 - **status**: 必須入力、pending/completed/cancelledのいずれか
 
 #### 関連付け
@@ -107,7 +104,7 @@ alwaysApply: true
 
 - `initialize(assignment_date, method)`
   - assignment_date: 当番日（デフォルト: 今日）
-  - method: 割り当て方法（random/sequential/custom）
+  - method: 割り当て方法（random/custom）
 
 #### メソッド
 
@@ -117,8 +114,7 @@ alwaysApply: true
 #### 割り当て方法
 
 1. **random**: 利用可能なユーザーからランダムに選択
-2. **sequential**: 前回の当番者の次のユーザーを選択（順番制）
-3. **custom**: 当番回数が最も少ないユーザーを選択（公平制）
+2. **custom**: 当番回数が最も少ないユーザーを選択（公平制）
 
 #### 除外条件
 
@@ -235,7 +231,7 @@ alwaysApply: true
 
 - **フォームフィールド**:
   - 当番日（デフォルト: 今日）
-  - 割り当て方法（ランダム/順番/公平）
+  - 割り当て方法（ランダム/公平）
 
 - **説明テキスト**:
   - 各割り当て方法の説明
@@ -297,7 +293,6 @@ root "users#index"  # ルートパス
 
 6. **割り当て方法**:
    - random: 利用可能なユーザーからランダム選択
-   - sequential: 前回当番者の次のユーザーを選択
    - custom: 当番回数が最も少ないユーザーを選択
 
 ## 通知・連携
@@ -335,5 +330,8 @@ root "users#index"  # ルートパス
 ### 生成AI連携機能
 - スピーチネタの自動生成・提案
 - 当番者向けのアイスブレイクコンテンツ提案
+- 当番履歴に基づく最適な割り当て提案
+
+
 - 当番履歴に基づく最適な割り当て提案
 
