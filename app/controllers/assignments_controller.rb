@@ -9,9 +9,7 @@ class AssignmentsController < ApplicationController
   end
 
   def index
-    @assignments = DutyAssignment.includes(:user).recent.limit(20)
     @current_assignment = DutyAssignment.for_date(Date.current).first
-    @upcoming_assignments = DutyAssignment.where(assignment_date: Date.current..1.week.from_now).recent
   end
 
   def show
