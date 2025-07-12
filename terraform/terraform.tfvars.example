@@ -1,0 +1,27 @@
+# AWS設定
+aws_region = "ap-northeast-1"
+availability_zones = ["ap-northeast-1a", "ap-northeast-1c"]
+
+# プロジェクト設定
+project_name = "ice-breakun2"
+environment = "development"
+
+# データベース設定
+database_name = "ice_breakun2"
+database_username = "ice_breakun2_user"
+database_password = "your-secure-password-here"
+
+# Slack設定
+slack_webhook_url = "https://hooks.slack.com/services/YOUR/WEBHOOK/URL"
+slack_channel = "#general"
+
+# アプリケーション設定
+app_image = "ice-breakun2:latest"
+
+# タグ設定
+tags = {
+  Project     = "ice-breakun2"
+  Environment = "development"
+  ManagedBy   = "terraform"
+  Team        = "your-team"
+} 

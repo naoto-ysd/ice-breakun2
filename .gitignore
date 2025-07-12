@@ -84,4 +84,16 @@ Thumbs.db
 !/app/assets/builds/.keep
 
 # Ignore yarn integrity file
-.yarn-integrity 
+.yarn-integrity
+
+# Terraform Files
+terraform/*.tfstate
+terraform/*.tfstate.*
+terraform/*.tfvars
+terraform/*.tfvars.json
+terraform/.terraform/
+terraform/.terraform.lock.hcl
+terraform/crash.log
+terraform/*tfplan*
+terraform/.terraformrc
+terraform/terraform.rc 
