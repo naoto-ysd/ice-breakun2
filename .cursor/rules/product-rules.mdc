@@ -166,7 +166,6 @@
 8. **complete**: 当番完了処理
 9. **cancel**: 当番キャンセル処理
 10. **assign_today**: 今日の当番を自動割り当て
-11. **assign_week**: 今週の当番を一括割り当て
 
 #### パラメーター
 
@@ -233,7 +232,6 @@
 
 - **今週の当番**:
   - 今週の当番一覧（日付、当番者、状態）
-  - 今週一括割り当てボタン
 
 - **当番履歴**:
   - 過去の当番一覧（日付、当番者、状態、完了日時）
@@ -278,7 +276,6 @@ resources :assignments do  # 当番管理のRESTfulルート
   end
   collection do
     post :assign_today  # 今日の当番割り当て
-    post :assign_week   # 今週の当番一括割り当て
   end
 end
 root "home#index"  # ルートパス（トップページ）
@@ -303,7 +300,6 @@ root "home#index"  # ルートパス（トップページ）
    - 同じ日に複数の当番割り当て不可
    - 休暇中のユーザーは自動的に除外
    - 利用可能なユーザーがいない場合はエラー
-   - 土日は自動割り当て対象外（今週一括割り当て時）
 
 5. **当番状態管理**:
    - pending（予定）: 割り当て直後の状態
@@ -394,6 +390,17 @@ root "home#index"  # ルートパス（トップページ）
   - 画面中央配置のためのFlexboxレイアウト
 - **理由**: SOW.mdの仕様に基づき、より分かりやすいエントリーポイントを提供
 - **互換性**: 既存のURL構造は変更なし、ルートパスのみ変更
+
+### 2025-01-28: 1週間一括割り当て機能削除
+- **変更内容**: 1週間の当番表を一括作成する機能を削除
+- **影響範囲**:
+  - AssignmentsController: assign_weekメソッドを削除
+  - AssignmentsController: send_weekly_slack_notificationメソッドを削除
+  - config/routes.rb: assign_weekルートを削除
+  - app/views/assignments/index.html.erb: 「今週を割り当て」ボタンを削除
+  - 機能仕様書: 関連する説明と業務ルールを削除
+- **理由**: SOW.mdの仕様変更に合わせて、1週間一括割り当て機能を削除
+- **互換性**: 個別の当番割り当て機能は継続して利用可能
 
 ### 2025-01-12: assignment_methodカラム削除
 - **変更内容**: DutyAssignmentsテーブルからassignment_methodカラムを削除し、システムを簡素化
