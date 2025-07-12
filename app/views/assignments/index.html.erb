@@ -52,7 +52,7 @@
         </div>
         <div class="card-body">
           <% if @tomorrow_assignment %>
-            <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex justify-content-between align-items-center mb-3">
               <div>
                 <h6 class="mb-1"><%= @tomorrow_assignment.user.name %></h6>
               </div>
@@ -66,6 +66,16 @@
                 <% end %>
               </div>
             </div>
+            <% if @tomorrow_assignment.pending? %>
+              <div class="d-flex align-items-center">
+                <%= form_with url: update_tomorrow_assignments_path, method: :patch, local: true, class: "d-flex align-items-center" do |form| %>
+                  <%= form.select :user_id, options_from_collection_for_select(@users, :id, :name, @tomorrow_assignment.user_id), 
+                                  { prompt: "担当者を選択..." }, 
+                                  { class: "form-select me-2", style: "width: 200px;" } %>
+                  <%= form.submit "更新", class: "btn btn-primary btn-sm" %>
+                <% end %>
+              </div>
+            <% end %>
           <% else %>
             <p class="text-muted">明日の当番はまだ割り当てられていません。</p>
             <div class="btn-group" role="group">
@@ -86,7 +96,7 @@
         </div>
         <div class="card-body">
           <% if @day_after_tomorrow_assignment %>
-            <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex justify-content-between align-items-center mb-3">
               <div>
                 <h6 class="mb-1"><%= @day_after_tomorrow_assignment.user.name %></h6>
               </div>
@@ -100,6 +110,16 @@
                 <% end %>
               </div>
             </div>
+            <% if @day_after_tomorrow_assignment.pending? %>
+              <div class="d-flex align-items-center">
+                <%= form_with url: update_day_after_tomorrow_assignments_path, method: :patch, local: true, class: "d-flex align-items-center" do |form| %>
+                  <%= form.select :user_id, options_from_collection_for_select(@users, :id, :name, @day_after_tomorrow_assignment.user_id), 
+                                  { prompt: "担当者を選択..." }, 
+                                  { class: "form-select me-2", style: "width: 200px;" } %>
+                  <%= form.submit "更新", class: "btn btn-primary btn-sm" %>
+                <% end %>
+              </div>
+            <% end %>
           <% else %>
             <p class="text-muted">明後日の当番はまだ割り当てられていません。</p>
             <div class="btn-group" role="group">

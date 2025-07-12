@@ -8,6 +8,8 @@ Rails.application.routes.draw do
     collection do
       post :assign_today
       post :assign_for_date
+      patch :update_tomorrow
+      patch :update_day_after_tomorrow
     end
   end
 

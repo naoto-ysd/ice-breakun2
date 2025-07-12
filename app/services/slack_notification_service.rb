@@ -14,6 +14,13 @@ class SlackNotificationService
     send_to_slack(message)
   end
 
+  def send_assignment_update_notification(assignment, old_user_name)
+    return unless @webhook_url.present?
+
+    message = build_assignment_update_message(assignment, old_user_name)
+    send_to_slack(message)
+  end
+
   def send_weekly_assignment_notification(assignments)
     return unless @webhook_url.present?
 
@@ -42,6 +49,41 @@ class SlackNotificationService
             },
             {
               title: "Slack ID",
+              value: "<@#{assignment.user.slack_id}>",
+              short: true
+            }
+          ],
+          footer: "アイスブレイ君",
+          ts: Time.current.to_i
+        }
+      ]
+    }
+  end
+
+  def build_assignment_update_message(assignment, old_user_name)
+    {
+      text: "🔄 アイスブレイク当番の変更のお知らせ",
+      attachments: [
+        {
+          color: "warning",
+          fields: [
+            {
+              title: "変更前",
+              value: old_user_name,
+              short: true
+            },
+            {
+              title: "変更後",
+              value: assignment.user.name,
+              short: true
+            },
+            {
+              title: "日付",
+              value: assignment.assignment_date.strftime("%Y年%m月%d日 (%a)"),
+              short: true
+            },
+            {
+              title: "新しい担当者",
               value: "<@#{assignment.user.slack_id}>",
               short: true
             }

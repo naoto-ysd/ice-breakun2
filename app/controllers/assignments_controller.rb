@@ -12,6 +12,7 @@ class AssignmentsController < ApplicationController
     @current_assignment = DutyAssignment.for_date(Date.current).first
     @tomorrow_assignment = DutyAssignment.for_date(Date.current + 1.day).first
     @day_after_tomorrow_assignment = DutyAssignment.for_date(Date.current + 2.days).first
+    @users = User.all
   end
 
   def show
@@ -104,6 +105,32 @@ class AssignmentsController < ApplicationController
       end
 
       redirect_to assignment_path(assignment), notice: "#{date_str}の当番が割り当てられました（#{assignment.user.name}さん）"
+    rescue => e
+      redirect_to assignments_path, alert: e.message
+    end
+  end
+
+  def update_tomorrow
+    begin
+      assignment_date = Date.current + 1.day
+      user = User.find(params[:user_id])
+      assignment_service = AssignmentService.new(assignment_date)
+      assignment = assignment_service.update_duty_assignment(user)
+
+      redirect_to assignments_path, notice: "明日の当番が更新されました（#{assignment.user.name}さん）"
+    rescue => e
+      redirect_to assignments_path, alert: e.message
+    end
+  end
+
+  def update_day_after_tomorrow
+    begin
+      assignment_date = Date.current + 2.days
+      user = User.find(params[:user_id])
+      assignment_service = AssignmentService.new(assignment_date)
+      assignment = assignment_service.update_duty_assignment(user)
+
+      redirect_to assignments_path, notice: "明後日の当番が更新されました（#{assignment.user.name}さん）"
     rescue => e
       redirect_to assignments_path, alert: e.message
     end

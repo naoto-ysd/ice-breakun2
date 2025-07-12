@@ -50,6 +50,27 @@ class AssignmentService
     assignment
   end
 
+  def update_duty_assignment(user)
+    assignment = existing_assignment
+
+    unless assignment
+      raise "#{@assignment_date}の当番が見つかりません"
+    end
+
+    # 選択されたユーザーが休暇中でないかチェック
+    if user_on_vacation?(user)
+      raise "#{user.name}は休暇中のため、当番に割り当てることができません"
+    end
+
+    old_user_name = assignment.user.name
+    assignment.update!(user: user)
+
+    # Slack通知を送信
+    send_slack_update_notification(assignment, old_user_name)
+
+    assignment
+  end
+
   private
 
   def existing_assignment
@@ -81,5 +102,12 @@ class AssignmentService
   rescue => e
     Rails.logger.error "Failed to send Slack notification: #{e.message}"
     # エラーが発生してもassignmentの作成は成功させる
+  end
+
+  def send_slack_update_notification(assignment, old_user_name)
+    SlackNotificationService.new.send_assignment_update_notification(assignment, old_user_name)
+  rescue => e
+    Rails.logger.error "Failed to send Slack update notification: #{e.message}"
+    # エラーが発生してもassignmentの更新は成功させる
   end
 end
