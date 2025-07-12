@@ -1,0 +1,78 @@
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-md-8 offset-md-2">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="mb-0">
+            <%= @user.name %>の詳細
+          </h3>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <h5>基本情報</h5>
+              <table class="table table-borderless">
+                <tbody>
+                  <tr>
+                    <th width="30%">名前:</th>
+                    <td><%= @user.name %></td>
+                  </tr>
+                  <tr>
+                    <th>メールアドレス:</th>
+                    <td><%= @user.email %></td>
+                  </tr>
+                  <tr>
+                    <th>Slack ID:</th>
+                    <td><%= @user.slack_id %></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            
+            <div class="col-md-6">
+              <h5>休暇情報</h5>
+              <% if @user.vacation_start_date.present? && @user.vacation_end_date.present? %>
+                <div class="<%= @user.on_vacation? ? 'alert alert-warning' : 'alert alert-info' %>">
+                  <strong>休暇期間:</strong><br>
+                  <%= @user.vacation_start_date.strftime("%Y年%m月%d日") %> から<br>
+                  <%= @user.vacation_end_date.strftime("%Y年%m月%d日") %> まで
+                  <% if @user.on_vacation? %>
+                    <br><strong>現在休暇中です</strong>
+                  <% end %>
+                </div>
+              <% else %>
+                <div class="alert alert-secondary">
+                  休暇は設定されていません
+                </div>
+              <% end %>
+              
+              <h5>当番可能状況</h5>
+              <% if @user.available_for_duty? %>
+                <div class="alert alert-success">
+                  <i class="bi bi-check-circle"></i> 当番可能
+                </div>
+              <% else %>
+                <div class="alert alert-warning">
+                  <i class="bi bi-exclamation-triangle"></i> 当番不可
+                  <% if @user.on_vacation? %>
+                    <small>（休暇中）</small>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card-footer">
+          <div class="btn-group" role="group">
+            <%= link_to "編集", edit_user_path(@user), class: "btn btn-primary" %>
+            <%= link_to "削除", user_path(@user), method: :delete, 
+                        class: "btn btn-danger", 
+                        data: { confirm: "本当に削除しますか？" } %>
+            <%= link_to "一覧に戻る", users_path, class: "btn btn-secondary" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

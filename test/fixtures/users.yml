@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  email: user1@example.com
+  slack_id: "@user1"
+  vacation_start_date: 2025-07-12
+  vacation_end_date: 2025-07-12
+
+two:
+  name: MyString
+  email: user2@example.com
+  slack_id: "@user2"
+  vacation_start_date: 2025-07-12
+  vacation_end_date: 2025-07-12

@@ -1,0 +1,53 @@
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="display-4">チームメンバー管理</h1>
+        <%= link_to "新規メンバー追加", new_user_path, class: "btn btn-primary" %>
+      </div>
+      
+      <div class="row">
+        <% @users.each do |user| %>
+          <div class="col-md-4 mb-3">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">
+                  <%= user.name %>
+                </h5>
+                <p class="card-text">
+                  <small class="text-muted">
+                    <i class="bi bi-envelope"></i> <%= user.email %><br>
+                    <i class="bi bi-slack"></i> <%= user.slack_id %>
+                  </small>
+                </p>
+                
+                <% if user.on_vacation? %>
+                  <div class="alert alert-warning py-2 mb-2">
+                    <i class="bi bi-airplane"></i> 休暇中
+                    <small>(<%= user.vacation_start_date.strftime("%m/%d") %> - <%= user.vacation_end_date.strftime("%m/%d") %>)</small>
+                  </div>
+                <% end %>
+                
+                <div class="btn-group" role="group">
+                  <%= link_to "詳細", user_path(user), class: "btn btn-outline-primary btn-sm" %>
+                  <%= link_to "編集", edit_user_path(user), class: "btn btn-outline-secondary btn-sm" %>
+                  <%= link_to "削除", user_path(user), method: :delete, 
+                              class: "btn btn-outline-danger btn-sm", 
+                              data: { confirm: "本当に削除しますか？" } %>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+      
+      <% if @users.empty? %>
+        <div class="alert alert-info text-center">
+          <h4>まだメンバーが登録されていません</h4>
+          <p>新しいメンバーを追加して、アイスブレイクを始めましょう！</p>
+          <%= link_to "最初のメンバーを追加", new_user_path, class: "btn btn-primary" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
