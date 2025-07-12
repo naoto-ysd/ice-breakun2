@@ -40,7 +40,6 @@
               <%= form.label :assignment_method, "割り当て方法", class: "form-label" %>
               <%= form.select :assignment_method, options_for_select([
                 ['ランダム', 'random'],
-                ['順番', 'sequential'],
                 ['公平（当番回数が少ない順）', 'custom']
               ], @assignment.assignment_method), {}, { class: "form-select" } %>
               <div class="form-text">

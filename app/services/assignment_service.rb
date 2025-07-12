@@ -24,7 +24,7 @@ class AssignmentService
   end
 
   def self.available_methods
-    %w[random sequential custom]
+    %w[random custom]
   end
 
   private
@@ -42,8 +42,6 @@ class AssignmentService
     case @method
     when "random"
       select_random_user(users)
-    when "sequential"
-      select_sequential_user(users)
     when "custom"
       select_custom_user(users)
     else
@@ -53,27 +51,6 @@ class AssignmentService
 
   def select_random_user(users)
     users.sample
-  end
-
-  def select_sequential_user(users)
-    # 前回割り当てられたユーザーの次のユーザーを選択
-    last_assignment = DutyAssignment.completed.recent.first
-
-    if last_assignment
-      user_ids = users.pluck(:id).sort
-      current_index = user_ids.index(last_assignment.user_id)
-
-      if current_index
-        next_index = (current_index + 1) % user_ids.length
-        User.find(user_ids[next_index])
-      else
-        # 前回のユーザーが現在のユーザーリストにいない場合は最初のユーザー
-        users.first
-      end
-    else
-      # 初回の場合は最初のユーザー
-      users.first
-    end
   end
 
   def select_custom_user(users)
