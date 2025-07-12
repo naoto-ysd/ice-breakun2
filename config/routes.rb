@@ -7,7 +7,6 @@ Rails.application.routes.draw do
     end
     collection do
       post :assign_today
-      post :assign_week
     end
   end
 

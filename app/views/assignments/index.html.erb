@@ -47,11 +47,8 @@
   <div class="row mb-4">
     <div class="col-12">
       <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
+        <div class="card-header">
           <h5 class="card-title mb-0">今週の当番</h5>
-          <div class="btn-group" role="group">
-            <%= button_to "今週を割り当て", assign_week_assignments_path, method: :post, class: "btn btn-outline-primary btn-sm", form_class: "d-inline" %>
-          </div>
         </div>
         <div class="card-body">
           <% if @upcoming_assignments.any? %>

@@ -81,28 +81,7 @@ class AssignmentsController < ApplicationController
     end
   end
 
-  def assign_week
-    begin
-      assignments = []
 
-      (Date.current..6.days.from_now).each do |date|
-        # 土日をスキップする場合
-        next if date.saturday? || date.sunday?
-
-        assignment_service = AssignmentService.new(date)
-        assignments << assignment_service.assign_duty
-      end
-
-      # 今週の当番表をSlackに通知
-      if assignments.any?
-        send_weekly_slack_notification(assignments)
-      end
-
-      redirect_to assignments_path, notice: "今週の当番が割り当てられました（#{assignments.size}件）"
-    rescue => e
-      redirect_to assignments_path, alert: e.message
-    end
-  end
 
   private
 
@@ -112,12 +91,5 @@ class AssignmentsController < ApplicationController
 
   def assignment_params
     params.require(:duty_assignment).permit(:assignment_date, :user_id)
-  end
-
-  def send_weekly_slack_notification(assignments)
-    SlackNotificationService.new.send_weekly_assignment_notification(assignments)
-  rescue => e
-    Rails.logger.error "Failed to send weekly Slack notification: #{e.message}"
-    # エラーが発生してもassignmentの作成は成功させる
   end
 end
