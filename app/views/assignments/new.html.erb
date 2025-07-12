@@ -1,0 +1,69 @@
+<% content_for :title, "新規当番割り当て" %>
+
+<div class="container">
+  <div class="row">
+    <div class="col-lg-8 offset-lg-2">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">新規当番割り当て</h5>
+        </div>
+        <div class="card-body">
+          <%= form_with(model: @assignment, local: true) do |form| %>
+            <% if @assignment.errors.any? %>
+              <div class="alert alert-danger">
+                <h4>エラーが発生しました:</h4>
+                <ul class="mb-0">
+                  <% @assignment.errors.full_messages.each do |message| %>
+                    <li><%= message %></li>
+                  <% end %>
+                </ul>
+              </div>
+            <% end %>
+
+            <div class="mb-3">
+              <%= form.label :assignment_date, "当番日", class: "form-label" %>
+              <%= form.date_field :assignment_date, class: "form-control", value: Date.current %>
+              <div class="form-text">
+                当番日を指定してください。空欄の場合は本日の日付になります。
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <%= form.label :assignment_method, "割り当て方法", class: "form-label" %>
+              <%= form.select :assignment_method, options_for_select([
+                ['ランダム', 'random'],
+                ['順番', 'sequential'],
+                ['公平（当番回数が少ない順）', 'custom']
+              ], 'random'), {}, { class: "form-select" } %>
+              <div class="form-text">
+                <ul class="mb-0">
+                  <li><strong>ランダム</strong>: 利用可能なユーザーからランダムに選択</li>
+                  <li><strong>順番</strong>: 前回の当番者の次のユーザーを選択</li>
+                  <li><strong>公平</strong>: 当番回数が最も少ないユーザーを選択</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12">
+                <div class="alert alert-info">
+                  <h6>注意事項:</h6>
+                  <ul class="mb-0">
+                    <li>休暇中のユーザーは自動的に除外されます</li>
+                    <li>同じ日に複数の当番を割り当てることはできません</li>
+                    <li>利用可能なユーザーがいない場合はエラーになります</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-between">
+              <%= link_to "戻る", assignments_path, class: "btn btn-secondary" %>
+              <%= form.submit "割り当て", class: "btn btn-primary" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

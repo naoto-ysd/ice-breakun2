@@ -1,5 +1,15 @@
 Rails.application.routes.draw do
   resources :users
+  resources :assignments do
+    member do
+      patch :complete
+      patch :cancel
+    end
+    collection do
+      post :assign_today
+      post :assign_week
+    end
+  end
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

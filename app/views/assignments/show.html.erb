@@ -1,0 +1,176 @@
+<% content_for :title, "当番詳細" %>
+
+<div class="container">
+  <div class="row mb-4">
+    <div class="col-md-8">
+      <h1>当番詳細</h1>
+    </div>
+    <div class="col-md-4 text-end">
+      <%= link_to "戻る", assignments_path, class: "btn btn-secondary" %>
+      <%= link_to "編集", edit_assignment_path(@assignment), class: "btn btn-primary" %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-8">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">当番情報</h5>
+        </div>
+        <div class="card-body">
+          <div class="row mb-3">
+            <div class="col-sm-3">
+              <strong>当番者:</strong>
+            </div>
+            <div class="col-sm-9">
+              <%= @assignment.user.name %>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-sm-3">
+              <strong>メールアドレス:</strong>
+            </div>
+            <div class="col-sm-9">
+              <%= @assignment.user.email %>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-sm-3">
+              <strong>Slack ID:</strong>
+            </div>
+            <div class="col-sm-9">
+              <%= @assignment.user.slack_id %>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-sm-3">
+              <strong>当番日:</strong>
+            </div>
+            <div class="col-sm-9">
+              <%= @assignment.assignment_date.strftime("%Y年%m月%d日 (%a)") %>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-sm-3">
+              <strong>割り当て方法:</strong>
+            </div>
+            <div class="col-sm-9">
+              <% case @assignment.assignment_method %>
+              <% when 'random' %>
+                ランダム
+              <% when 'sequential' %>
+                順番
+              <% when 'custom' %>
+                公平（当番回数が少ない順）
+              <% else %>
+                <%= @assignment.assignment_method %>
+              <% end %>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-sm-3">
+              <strong>状態:</strong>
+            </div>
+            <div class="col-sm-9">
+              <% if @assignment.pending? %>
+                <span class="badge bg-warning">予定</span>
+                <% if @assignment.overdue? %>
+                  <span class="badge bg-danger ms-2">期限切れ</span>
+                <% end %>
+              <% elsif @assignment.completed? %>
+                <span class="badge bg-success">完了</span>
+              <% else %>
+                <span class="badge bg-secondary">キャンセル</span>
+              <% end %>
+            </div>
+          </div>
+
+          <% if @assignment.completed_at %>
+            <div class="row mb-3">
+              <div class="col-sm-3">
+                <strong>完了日時:</strong>
+              </div>
+              <div class="col-sm-9">
+                <%= @assignment.completed_at.strftime("%Y年%m月%d日 %H:%M") %>
+              </div>
+            </div>
+          <% end %>
+
+          <div class="row mb-3">
+            <div class="col-sm-3">
+              <strong>作成日時:</strong>
+            </div>
+            <div class="col-sm-9">
+              <%= @assignment.created_at.strftime("%Y年%m月%d日 %H:%M") %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">アクション</h5>
+        </div>
+        <div class="card-body">
+          <% if @assignment.pending? %>
+            <div class="d-grid gap-2">
+              <%= link_to "完了", complete_assignment_path(@assignment), method: :patch, class: "btn btn-success" %>
+              <%= link_to "キャンセル", cancel_assignment_path(@assignment), method: :patch, class: "btn btn-outline-danger" %>
+            </div>
+          <% elsif @assignment.completed? %>
+            <p class="text-success">この当番は完了しています。</p>
+          <% else %>
+            <p class="text-muted">この当番はキャンセルされています。</p>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="card mt-3">
+        <div class="card-header">
+          <h5 class="card-title mb-0">当番者統計</h5>
+        </div>
+        <div class="card-body">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <strong>完了回数:</strong>
+            </div>
+            <div class="col-sm-6">
+              <%= @assignment.user.total_duty_count %>回
+            </div>
+          </div>
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <strong>前回当番:</strong>
+            </div>
+            <div class="col-sm-6">
+              <% if @assignment.user.last_duty_assignment && @assignment.user.last_duty_assignment != @assignment %>
+                <%= @assignment.user.last_duty_assignment.assignment_date.strftime("%m/%d") %>
+              <% else %>
+                -
+              <% end %>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <strong>休暇中:</strong>
+            </div>
+            <div class="col-sm-6">
+              <% if @assignment.user.on_vacation? %>
+                <span class="badge bg-warning">休暇中</span>
+              <% else %>
+                <span class="badge bg-success">勤務中</span>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

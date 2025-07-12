@@ -11,7 +11,7 @@
 
     <link rel="manifest" href="/manifest.json">
     <link rel="icon" href="/icon.png" type="image/png">
-    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="icon" href="/icon.png" type="image/png">
     <link rel="apple-touch-icon" href="/icon.png">
     
     <!-- Bootstrap CSS -->
@@ -39,7 +39,7 @@
               <%= link_to "メンバー管理", users_path, class: "nav-link" %>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">当番履歴</a>
+              <%= link_to "当番管理", assignments_path, class: "nav-link" %>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#">設定</a>

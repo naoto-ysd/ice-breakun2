@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  assignment_date: 2025-07-12
+  assignment_method: MyString
+  status: MyString
+  completed_at: 2025-07-12 15:16:04
+
+two:
+  user: two
+  assignment_date: 2025-07-12
+  assignment_method: MyString
+  status: MyString
+  completed_at: 2025-07-12 15:16:04

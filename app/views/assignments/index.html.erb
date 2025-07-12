@@ -1,0 +1,163 @@
+<% content_for :title, "当番管理" %>
+
+<div class="container">
+  <div class="row mb-4">
+    <div class="col-md-8">
+      <h1>当番管理</h1>
+    </div>
+    <div class="col-md-4 text-end">
+      <%= link_to "新規当番割り当て", new_assignment_path, class: "btn btn-primary" %>
+    </div>
+  </div>
+
+  <!-- 今日の当番 -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">今日の当番</h5>
+        </div>
+        <div class="card-body">
+          <% if @current_assignment %>
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <h6 class="mb-1"><%= @current_assignment.user.name %></h6>
+                <small class="text-muted">割り当て方法: <%= @current_assignment.assignment_method %></small>
+              </div>
+              <div>
+                <% if @current_assignment.pending? %>
+                  <%= button_to "完了", complete_assignment_path(@current_assignment), method: :patch, class: "btn btn-success btn-sm", form_class: "d-inline" %>
+                  <%= button_to "キャンセル", cancel_assignment_path(@current_assignment), method: :patch, class: "btn btn-outline-danger btn-sm", form_class: "d-inline" %>
+                <% else %>
+                  <span class="badge bg-success">完了</span>
+                <% end %>
+              </div>
+            </div>
+          <% else %>
+            <p class="text-muted">今日の当番はまだ割り当てられていません。</p>
+            <div class="btn-group" role="group">
+              <%= button_to "ランダム割り当て", assign_today_assignments_path(method: :random), method: :post, class: "btn btn-outline-primary", form_class: "d-inline" %>
+              <%= button_to "順番割り当て", assign_today_assignments_path(method: :sequential), method: :post, class: "btn btn-outline-primary", form_class: "d-inline" %>
+              <%= button_to "公平割り当て", assign_today_assignments_path(method: :custom), method: :post, class: "btn btn-outline-primary", form_class: "d-inline" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 今週の当番 -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5 class="card-title mb-0">今週の当番</h5>
+          <div class="btn-group" role="group">
+            <%= button_to "今週を順番で割り当て", assign_week_assignments_path(method: :sequential), method: :post, class: "btn btn-outline-primary btn-sm", form_class: "d-inline" %>
+            <%= button_to "今週を公平に割り当て", assign_week_assignments_path(method: :custom), method: :post, class: "btn btn-outline-primary btn-sm", form_class: "d-inline" %>
+          </div>
+        </div>
+        <div class="card-body">
+          <% if @upcoming_assignments.any? %>
+            <div class="table-responsive">
+              <table class="table table-sm">
+                <thead>
+                  <tr>
+                    <th>日付</th>
+                    <th>当番者</th>
+                    <th>方法</th>
+                    <th>状態</th>
+                    <th>アクション</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% @upcoming_assignments.each do |assignment| %>
+                    <tr>
+                      <td><%= assignment.assignment_date.strftime("%m/%d (%a)") %></td>
+                      <td><%= assignment.user.name %></td>
+                      <td><%= assignment.assignment_method %></td>
+                      <td>
+                        <% if assignment.pending? %>
+                          <span class="badge bg-warning">予定</span>
+                        <% elsif assignment.completed? %>
+                          <span class="badge bg-success">完了</span>
+                        <% else %>
+                          <span class="badge bg-secondary">キャンセル</span>
+                        <% end %>
+                      </td>
+                      <td>
+                        <%= link_to "詳細", assignment, class: "btn btn-outline-secondary btn-sm" %>
+                      </td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+          <% else %>
+            <p class="text-muted">今週の当番はまだ割り当てられていません。</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 当番履歴 -->
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">当番履歴</h5>
+        </div>
+        <div class="card-body">
+          <% if @assignments.any? %>
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>日付</th>
+                    <th>当番者</th>
+                    <th>割り当て方法</th>
+                    <th>状態</th>
+                    <th>完了日時</th>
+                    <th>アクション</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% @assignments.each do |assignment| %>
+                    <tr class="<%= 'table-warning' if assignment.overdue? %>">
+                      <td><%= assignment.assignment_date.strftime("%Y/%m/%d (%a)") %></td>
+                      <td><%= assignment.user.name %></td>
+                      <td><%= assignment.assignment_method %></td>
+                      <td>
+                        <% if assignment.pending? %>
+                          <span class="badge bg-warning">予定</span>
+                        <% elsif assignment.completed? %>
+                          <span class="badge bg-success">完了</span>
+                        <% else %>
+                          <span class="badge bg-secondary">キャンセル</span>
+                        <% end %>
+                      </td>
+                      <td>
+                        <%= assignment.completed_at&.strftime("%Y/%m/%d %H:%M") %>
+                      </td>
+                      <td>
+                        <%= link_to "詳細", assignment, class: "btn btn-outline-secondary btn-sm" %>
+                        <% if assignment.pending? %>
+                          <%= button_to "完了", complete_assignment_path(assignment), method: :patch, class: "btn btn-success btn-sm", form_class: "d-inline" %>
+                          <%= button_to "キャンセル", cancel_assignment_path(assignment), method: :patch, class: "btn btn-outline-danger btn-sm", form_class: "d-inline" %>
+                        <% end %>
+                        <%= button_to "削除", assignment, method: :delete, data: { confirm: "削除してもよろしいですか？" }, class: "btn btn-outline-danger btn-sm", form_class: "d-inline" %>
+                      </td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+          <% else %>
+            <p class="text-muted">当番履歴がありません。</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  has_many :duty_assignments, dependent: :destroy
+
   validates :name, presence: true
   validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :slack_id, presence: true, uniqueness: true
@@ -14,5 +16,13 @@ class User < ApplicationRecord
 
   def full_name
     name
+  end
+
+  def last_duty_assignment
+    duty_assignments.recent.first
+  end
+
+  def total_duty_count
+    duty_assignments.completed.count
   end
 end

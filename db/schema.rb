@@ -10,7 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_12_055455) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_12_061604) do
+  create_table "duty_assignments", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.date "assignment_date"
+    t.string "assignment_method"
+    t.string "status"
+    t.datetime "completed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_duty_assignments_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "name"
     t.string "email"
@@ -20,4 +31,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_12_055455) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
+
+  add_foreign_key "duty_assignments", "users"
 end
