@@ -5,7 +5,9 @@ class AssignmentService
   end
 
   def assign_duty
-    return existing_assignment if existing_assignment
+    if existing_assignment
+      raise "#{@assignment_date}の当番は既に割り当てられています（#{existing_assignment.user.name}）"
+    end
 
     available_users = User.where.not(id: excluded_user_ids)
 
@@ -35,7 +37,11 @@ class AssignmentService
 
   def excluded_user_ids
     # 休暇中のユーザーを除外
-    User.select(:id).reject(&:available_for_duty?).map(&:id)
+    User.where(
+      "vacation_start_date <= ? AND vacation_end_date >= ?",
+      Date.current,
+      Date.current
+    ).pluck(:id)
   end
 
   def select_user(users)

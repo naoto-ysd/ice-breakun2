@@ -1,5 +1,12 @@
+require_relative "../services/assignment_service"
+
 class AssignmentsController < ApplicationController
   before_action :set_assignment, only: [ :show, :edit, :update, :destroy ]
+
+  # AssignmentServiceを明示的に参照して自動読み込みを確実にする
+  def self.load_assignment_service
+    AssignmentService
+  end
 
   def index
     @assignments = DutyAssignment.includes(:user).recent.limit(20)
@@ -63,11 +70,16 @@ class AssignmentsController < ApplicationController
 
   def assign_today
     begin
+      Rails.logger.info "=== assign_today called with method: #{params[:method]}"
       assignment_service = AssignmentService.new(Date.current, params[:method] || :custom)
+      Rails.logger.info "=== AssignmentService created"
       assignment = assignment_service.assign_duty
+      Rails.logger.info "=== Assignment created: #{assignment.inspect}"
 
-      redirect_to assignment, notice: "今日の当番が割り当てられました"
+      redirect_to assignment, notice: "今日の当番が割り当てられました（#{assignment.user.name}さん）"
     rescue => e
+      Rails.logger.error "=== Assignment failed: #{e.class} - #{e.message}"
+      Rails.logger.error "=== Backtrace: #{e.backtrace.first(5)}"
       redirect_to assignments_path, alert: e.message
     end
   end
