@@ -31,7 +31,7 @@
 | id | integer | PRIMARY KEY | 自動増分ID |
 | user_id | integer | NOT NULL, FOREIGN KEY | ユーザーID（外部キー） |
 | assignment_date | date | NOT NULL | 当番日 |
-| assignment_method | string | NOT NULL | 割り当て方法（random/custom） |
+| assignment_method | string | NOT NULL | 割り当て方法（custom） |
 | status | string | NOT NULL | 状態（pending/completed/cancelled） |
 | completed_at | datetime | NULL可 | 完了日時 |
 | created_at | datetime | NOT NULL | 作成日時 |
@@ -69,7 +69,7 @@
 #### バリデーション
 
 - **assignment_date**: 必須入力
-- **assignment_method**: 必須入力、random/customのいずれか
+- **assignment_method**: 必須入力、customのみ
 - **status**: 必須入力、pending/completed/cancelledのいずれか
 
 #### 関連付け
@@ -104,7 +104,7 @@
 
 - `initialize(assignment_date, method)`
   - assignment_date: 当番日（デフォルト: 今日）
-  - method: 割り当て方法（random/custom）
+  - method: 割り当て方法（custom、デフォルト: custom）
 
 #### メソッド
 
@@ -113,8 +113,7 @@
 
 #### 割り当て方法
 
-1. **random**: 利用可能なユーザーからランダムに選択
-2. **custom**: 当番回数が最も少ないユーザーを選択（公平制）
+1. **custom**: 当番回数が最も少ないユーザーを選択（公平制）
 
 #### 除外条件
 
@@ -206,7 +205,7 @@
 - **今日の当番**:
   - 当番者情報（名前、割り当て方法）
   - 完了・キャンセルボタン（予定状態の場合）
-  - 自動割り当てボタン（未割り当ての場合）
+  - 公平割り当てボタン（未割り当ての場合）
 
 - **今週の当番**:
   - 今週の当番一覧（日付、当番者、方法、状態）
@@ -231,10 +230,10 @@
 
 - **フォームフィールド**:
   - 当番日（デフォルト: 今日）
-  - 割り当て方法（ランダム/公平）
+  - 割り当て方法（公平のみ）
 
 - **説明テキスト**:
-  - 各割り当て方法の説明
+  - 公平割り当て方法の説明
   - 注意事項
 
 #### 編集画面（edit）
@@ -292,8 +291,7 @@ root "users#index"  # ルートパス
    - 期限切れ判定: 予定状態で当番日が過去の場合
 
 6. **割り当て方法**:
-   - random: 利用可能なユーザーからランダム選択
-   - custom: 当番回数が最も少ないユーザーを選択
+   - custom: 当番回数が最も少ないユーザーを選択（公平制）
 
 ## 通知・連携
 
@@ -331,6 +329,19 @@ root "users#index"  # ルートパス
 - スピーチネタの自動生成・提案
 - 当番者向けのアイスブレイクコンテンツ提案
 - 当番履歴に基づく最適な割り当て提案
+
+## 変更履歴
+
+### 2025-01-28: ランダム割り当て機能削除
+- **変更内容**: ランダム割り当て機能を削除し、公平割り当て（custom）のみに統一
+- **影響範囲**:
+  - AssignmentService: randomメソッドを削除、デフォルト値をcustomに変更
+  - AssignmentsController: 全てのデフォルト値をcustomに変更
+  - ビューファイル: ランダム選択肢とボタンを削除
+  - DutyAssignmentモデル: バリデーションからrandomを削除
+  - テストフィクスチャ: assignment_methodをcustomに変更
+- **理由**: 公平な当番割り当てを実現するため、ランダム要素を排除
+- **互換性**: 既存のrandomで作成されたレコードは維持されるが、新規作成時はcustomのみ選択可能
 
 
 - 当番履歴に基づく最適な割り当て提案
