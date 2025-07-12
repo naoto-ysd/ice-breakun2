@@ -8,7 +8,7 @@
           <h5 class="card-title mb-0">当番編集</h5>
         </div>
         <div class="card-body">
-          <%= form_with(model: @assignment, local: true) do |form| %>
+          <%= form_with(model: @assignment, url: assignment_path(@assignment), local: true) do |form| %>
             <% if @assignment.errors.any? %>
               <div class="alert alert-danger">
                 <h4>エラーが発生しました:</h4>

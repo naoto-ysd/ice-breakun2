@@ -97,6 +97,11 @@ class AssignmentsController < ApplicationController
         assignments << assignment_service.assign_duty
       end
 
+      # 今週の当番表をSlackに通知
+      if assignments.any?
+        send_weekly_slack_notification(assignments)
+      end
+
       redirect_to assignments_path, notice: "今週の当番が割り当てられました（#{assignments.size}件）"
     rescue => e
       redirect_to assignments_path, alert: e.message
@@ -111,5 +116,12 @@ class AssignmentsController < ApplicationController
 
   def assignment_params
     params.require(:duty_assignment).permit(:assignment_date, :assignment_method, :user_id)
+  end
+
+  def send_weekly_slack_notification(assignments)
+    SlackNotificationService.new.send_weekly_assignment_notification(assignments)
+  rescue => e
+    Rails.logger.error "Failed to send weekly Slack notification: #{e.message}"
+    # エラーが発生してもassignmentの作成は成功させる
   end
 end
