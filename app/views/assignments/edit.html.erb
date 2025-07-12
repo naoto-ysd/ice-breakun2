@@ -39,7 +39,7 @@
             <div class="mb-3">
               <%= form.label :assignment_method, "割り当て方法", class: "form-label" %>
               <%= form.select :assignment_method, options_for_select([
-                ['公平（当番回数が少ない順）', 'custom']
+                ['割り当て（当番回数が少ない順）', 'custom']
               ], @assignment.assignment_method), {}, { class: "form-select" } %>
               <div class="form-text">
                 割り当て方法を変更できます。
