@@ -83,7 +83,7 @@
                         <% end %>
                       </td>
                       <td>
-                        <%= link_to "詳細", assignment, class: "btn btn-outline-secondary btn-sm" %>
+                        <%= link_to "詳細", assignment_path(assignment), class: "btn btn-outline-secondary btn-sm" %>
                       </td>
                     </tr>
                   <% end %>
@@ -138,12 +138,12 @@
                         <%= assignment.completed_at&.strftime("%Y/%m/%d %H:%M") %>
                       </td>
                       <td>
-                        <%= link_to "詳細", assignment, class: "btn btn-outline-secondary btn-sm" %>
+                        <%= link_to "詳細", assignment_path(assignment), class: "btn btn-outline-secondary btn-sm" %>
                         <% if assignment.pending? %>
                           <%= button_to "完了", complete_assignment_path(assignment), method: :patch, class: "btn btn-success btn-sm", form_class: "d-inline" %>
                           <%= button_to "キャンセル", cancel_assignment_path(assignment), method: :patch, class: "btn btn-outline-danger btn-sm", form_class: "d-inline" %>
                         <% end %>
-                        <%= button_to "削除", assignment, method: :delete, data: { confirm: "削除してもよろしいですか？" }, class: "btn btn-outline-danger btn-sm", form_class: "d-inline" %>
+                        <%= button_to "削除", assignment_path(assignment), method: :delete, data: { confirm: "削除してもよろしいですか？" }, class: "btn btn-outline-danger btn-sm", form_class: "d-inline" %>
                       </td>
                     </tr>
                   <% end %>

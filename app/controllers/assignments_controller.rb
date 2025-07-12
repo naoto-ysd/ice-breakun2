@@ -31,7 +31,7 @@ class AssignmentsController < ApplicationController
 
       @assignment = assignment_service.assign_duty
 
-      redirect_to @assignment, notice: "当番が正常に割り当てられました"
+      redirect_to assignment_path(@assignment), notice: "当番が正常に割り当てられました"
     rescue => e
       @available_methods = AssignmentService.available_methods
       @assignment = DutyAssignment.new(assignment_params)
@@ -45,7 +45,7 @@ class AssignmentsController < ApplicationController
 
   def update
     if @assignment.update(assignment_params)
-      redirect_to @assignment, notice: "当番が正常に更新されました"
+      redirect_to assignment_path(@assignment), notice: "当番が正常に更新されました"
     else
       render :edit
     end
@@ -76,7 +76,7 @@ class AssignmentsController < ApplicationController
       assignment = assignment_service.assign_duty
       Rails.logger.info "=== Assignment created: #{assignment.inspect}"
 
-      redirect_to assignment, notice: "今日の当番が割り当てられました（#{assignment.user.name}さん）"
+      redirect_to assignment_path(assignment), notice: "今日の当番が割り当てられました（#{assignment.user.name}さん）"
     rescue => e
       Rails.logger.error "=== Assignment failed: #{e.class} - #{e.message}"
       Rails.logger.error "=== Backtrace: #{e.backtrace.first(5)}"
