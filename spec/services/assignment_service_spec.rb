@@ -9,17 +9,36 @@ RSpec.describe AssignmentService, type: :service do
     context 'when users are available' do
       let!(:user1) { create(:user, name: 'User 1') }
       let!(:user2) { create(:user, name: 'User 2') }
+      let(:slack_service) { instance_double(SlackNotificationService) }
+
+      before do
+        allow(SlackNotificationService).to receive(:new).and_return(slack_service)
+        allow(slack_service).to receive(:send_assignment_notification)
+      end
 
       it 'creates a new duty assignment' do
         expect { service.assign_duty }.to change(DutyAssignment, :count).by(1)
       end
 
-            it 'assigns the user with the least duty count' do
+      it 'sends Slack notification' do
+        assignment = service.assign_duty
+        expect(slack_service).to have_received(:send_assignment_notification).with(assignment)
+      end
+
+      it 'assigns the user with the least duty count' do
         # user1に既に1つの当番を割り当て（異なる日付で）
         create(:duty_assignment, user: user1, status: 'completed', assignment_date: Date.current - 1.day)
 
         assignment = service.assign_duty
         expect(assignment.user).to eq(user2)
+      end
+
+      it 'continues to create assignment even if Slack notification fails' do
+        allow(slack_service).to receive(:send_assignment_notification).and_raise(StandardError.new('Slack error'))
+        allow(Rails.logger).to receive(:error)
+
+        expect { service.assign_duty }.to change(DutyAssignment, :count).by(1)
+        expect(Rails.logger).to have_received(:error).with('Failed to send Slack notification: Slack error')
       end
     end
 
